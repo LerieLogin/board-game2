@@ -22,6 +22,31 @@
     box-sizing: border-box;
 }
 
+.board-square.white::after {
+    content: '';
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid black;
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+    background-color: white;
+}
+.board-square.black::after {
+    content: '';
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid black;
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+    background-color: black;
+}
+
 .board-square:nth-child(16n + 1),
 .board-square:nth-child(16n + 3),
 .board-square:nth-child(16n + 5),
