@@ -9,42 +9,89 @@ let lastPlacedSquare = null;
 // let clickedSquare = null;
 // let clickedPiece = null;
 
+// Object array
+let squareArray = []
+// Constructor for square objects
+const Square = function(id, row, col, containsWhite, containsBlack) {
+  this.id = id
+  this.row = row
+  this.col = col
+  this.containsWhite = containsWhite
+  this.containsBlack = containsBlack
+  // Add each object to the array as it is created
+  squareArray.push(this)
+  // Give each square a variable like squareArray.square00 (might not use or need)
+  const varName = `square${row}${col}`;
+  squareArray[varName] = this;
+}
+
 board.classList.add("board");
 
+// Create 64 square objects
 function makeBoard() {
   
   board.classList.add("board");
 
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
-      const boardSquare = document.createElement("div");
-      boardSquare.classList.add("board-square");
-      boardSquare.id = `square-${row}-${col}`;
-    
-      
-       
-        
-      // clickedPiece = this.querySelector(".white-piece") || this.querySelector(".black-piece");
-        
-      // });
-
-      board.appendChild(boardSquare);
-    }
-    main.appendChild(board);
-    
-  }
-  
-              
-        
+      const square = new Square(`square-${row}-${col}`, row, col, false, false)
+    }  
+  }   
 }
 
+// Render board from square objects
+function renderBoard() {
+  board.innerHTML = ''
+  squareArray.forEach((square) => {
+    // Create square divs
+    const boardSquare = document.createElement("div");
+    // Make each square div a board square
+    boardSquare.classList.add("board-square");
+    // Set the ID of the board square to the current square object being used to create the square
+    boardSquare.id = square.id;
+    let pieceClass;
+    // This is just a test to see if the classes stayed between renderings
+    if (square.containsWhite) {
+      pieceClass = 'white'
+    } else if (square.containsBlack) {
+      pieceClass = 'black'
+    } else {
+      pieceClass = 'empty'
+    }
+    // Give square a class of white black or empty based on above
+    boardSquare.classList.add(pieceClass)
+    board.appendChild(boardSquare);
+    
+  })
+  main.appendChild(board)
+}
+// Make objects and then render squares
 makeBoard();
+renderBoard();
 
+
+function findSquare(value) {
+  return squareArray.find(square => square.id === value)
+}
 
 // can be adjusted 
 function turnLogic(pieceContainer, square) {
     console.log(pieceContainer)
     console.log(square.id)
+    // Find the square object that corresponds to the square being clicked
+    const thisSquare = findSquare(square.id)
+    // If white turn, set the (object) square.containsWhite parameter to true, which will add a white "piece" when rendered
+    if (isWhiteTurn) {
+      thisSquare.containsWhite = true;
+      renderBoard()
+      console.log(thisSquare)
+    // Same for black, but will need a check for whether square already has a piece
+    } else {
+      thisSquare.containsBlack = true;
+      renderBoard()
+      console.log(thisSquare)
+    }
+    console.log(thisSquare)
     const capture = square.id
     if (isWhiteTurn) {
       console.log("white turn");
