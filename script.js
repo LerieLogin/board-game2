@@ -62,12 +62,13 @@ function renderBoard() {
     boardSquare.classList.add(pieceClass)
     board.appendChild(boardSquare);
     
+    
   })
   main.appendChild(board)
 }
 // Make objects and then render squares
 makeBoard();
-renderBoard();
+renderBoard()
 
 
 function findSquare(value) {
@@ -76,61 +77,58 @@ function findSquare(value) {
 
 // can be adjusted 
 function turnLogic(pieceContainer, square) {
-    console.log(pieceContainer)
-    console.log(square.id)
+    // console.log(pieceContainer)
+    // console.log(square.id)
     // Find the square object that corresponds to the square being clicked
     const thisSquare = findSquare(square.id)
     // If white turn, set the (object) square.containsWhite parameter to true, which will add a white "piece" when rendered
-    if (isWhiteTurn) {
-      thisSquare.containsWhite = true;
-      renderBoard()
-      console.log(thisSquare)
-    // Same for black, but will need a check for whether square already has a piece
-    } else {
-      thisSquare.containsBlack = true;
-      renderBoard()
-      console.log(thisSquare)
-    }
+    
     console.log(thisSquare)
     const capture = square.id
     if (isWhiteTurn) {
       console.log("white turn");
-      if (square.children.length === 0) {
+      if (square.children.length === 0 && square.classList.contains('empty')) {
         whitePiece.classList.add("white-piece");
-        square.appendChild(whitePiece.cloneNode(true));
-        fourRow(square)
+        square.classList.toggle('empty')
+        square.classList.toggle('white')
+        // square.appendChild(whitePiece.cloneNode(true));
+        
+        console.log(square)
+        fourRowCheck(square)
         
         lastPlacedPiece = whitePiece;
         lastPlacedSquare = square;
-        console.log(lastPlacedSquare)
+        
         
         
         console.log("Piece placed on square:", square);
         isWhiteTurn = !isWhiteTurn;
-      } else if (pieceContainer.contains() === document.querySelector(".white-piece")) {
+      } else if (square.classList.contains('black' || 'white')) {
         console.log("There is already a piece there.");
-        // captureOptionHandler()
-        capturePiece(capture, lastPlacedSquare);
+       
+        
         
         return;
       }
     } else {
       console.log("black turn");
-      if (square.children.length === 0) {
+      if (square.children.length === 0 && square.classList.contains('empty')){
         
         blackPiece.classList.add("black-piece");
-        square.appendChild(blackPiece.cloneNode(true));
-        fourRow(square)
+        square.classList.toggle('empty')
+        square.classList.toggle('black')
+        // square.appendChild(blackPiece.cloneNode(true));
+        console.log(square)
+        fourRowCheck(square)
         lastPlacedPiece = this;
         lastPlacedSquare = square;
-        console.log(lastPlacedSquare)
+       
     
         console.log("Piece placed on square:", square);
         isWhiteTurn = !isWhiteTurn;
-      } else if (boardSquare.querySelector(".black-piece")) {
+      } else if (square.classList === 'black' || 'white') {
         console.log("There is already a piece there.");
-        // captureOptionHandler()
-        capturePiece(capture);
+        console.log(square)
         
         
         return;
@@ -144,16 +142,16 @@ console.log(board)
 // btn.addEventListener("click", calculateScores);
 board.addEventListener('click', function(event) {
   console.log(event.target)
-  console.log('hello')
+  
   const pieceContainer = event.target.id
   const square = event.target
 
 
 
-  if (event.target.matches('.white-piece') ) {
+  if (event.target.matches('.white') ) {
     console.log('white piece clicked')
     
-  } else if (event.target.matches('.black-piece')) {
+  } else if (event.target.matches('.black')) {
     console.log('black piece clicked')
     
 
@@ -167,58 +165,57 @@ board.addEventListener('click', function(event) {
 // TODO capture function
 
 // TODO four in a row check 
-function fourRow(square) {
-  console.log(square);
-  
-  for (let row = 0; row < 3; row++) {
-    for (let col = 0; col < 3; col++) {
-      // const squareId = `square-${row}-${col}`;
-      // const currentSquare = document.getElementById(squareId);
-      const row = parseInt(square.id.split('-')[1]);
-      const col = parseInt(square.id.split('-')[2]); 
+function fourRowCheck(square) {
+  const row = square.row;
+  const col = square.col;
 
-          const square1 = document.getElementById(`square-${row}-${col}`);
-          const square2 = document.getElementById(`square-${row}-${col - 1}`);
-          const square3 = document.getElementById(`square-${row}-${col - 2}`);
-          const square4 = document.getElementById(`square-${row}-${col - 3}`);
+  // Check if there are enough squares to form a four-in-a-row horizontally
+  if (col >= 3) {
+      const square1 = squareArray.find(sq => sq.row === row && sq.col === col);
+      const square2 = squareArray.find(sq => sq.row === row && sq.col === col - 1);
+      const square3 = squareArray.find(sq => sq.row === row && sq.col === col - 2);
+      const square4 = squareArray.find(sq => sq.row === row && sq.col === col - 3);
+      
+      fourLogic(square1, square2, square3, square4, square);
+  }
+}
 
-          if (square1 && square2 && square3 && square4) {
-              const piece1 = square1.querySelector(".black-piece")
-                  ? "black"
-                  : square1.querySelector(".white-piece")
-                      ? "white"
-                      : null;
-              const piece2 = square2.querySelector(".black-piece")
-                  ? "black"
-                  : square2.querySelector(".white-piece")
-                      ? "white"
-                      : null;
-              const piece3 = square3.querySelector(".black-piece")
-                  ? "black"
-                  : square3.querySelector(".white-piece")
-                      ? "white"
-                      : null;
-              const piece4 = square4.querySelector(".black-piece")
-                  ? "black"
-                  : square4.querySelector(".white-piece")
-                      ? "white"
-                      : null;
-              if (
-                  piece1 &&
-                  piece2 &&
-                  piece3 &&
-                  piece4 &&
-                  piece1 === piece2 &&
-                  piece2 === piece3 &&
-                  piece3 === piece4
-              ) {
-                  console.log("four in a row");
-                  console.log(square1, square2, square3, square4)
-                  square4.querySelector(".black-piece") ? square4.removeChild() : square4.querySelector('.white-piece') ? square4.removeChild() : null;
-                  isWhiteTurn = !isWhiteTurn; // Toggle the turn
-                  return;
-              }
-          }
+function fourLogic(square1, square2, square3, square4, square) {
+  if (square1 === square2 && square2 === square3 && square3 === square4) {
+      const piece1 = square1.querySelector(".black")
+          ? "black"
+          : square1.querySelector(".white")
+              ? "white"
+              : null;
+      const piece2 = square2.querySelector(".black")
+          ? "black"
+          : square2.querySelector(".white")
+              ? "white"
+              : null;
+      const piece3 = square3.querySelector(".black")
+          ? "black"
+          : square3.querySelector(".white")
+              ? "white"
+              : null;
+      const piece4 = square4.querySelector(".black")
+          ? "black"
+          : square4.querySelector(".white")
+              ? "white"
+              : null;
+      if (
+          piece1 &&
+          piece2 &&
+          piece3 &&
+          piece4 &&
+          piece1 === piece2 &&
+          piece2 === piece3 &&
+          piece3 === piece4
+      ) {
+          console.log("four in a row");
+          console.log(square1, square2, square3, square4)
+          square.classList.toggle('empty')
+          isWhiteTurn = !isWhiteTurn; // Toggle the turn
+          return;
       }
   }
 }
