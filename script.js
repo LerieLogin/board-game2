@@ -88,8 +88,10 @@ function fourCheckLoop(thisSquare) {
   const fourCheckLeftArray = [];
   const fourCheckUpArray = [];
   const fourCheckDownArray = [];
-  const fourCheckDiagArrayLeft = [];
-  const fourCheckDiagArrayRight = [];
+  const fourCheckDiagArrayLeftDown = [];
+  const fourCheckDiagArrayLeftUp = [];
+  const fourCheckDiagArrayRightDown = [];
+  const fourCheckDiagArrayRightUp = [];
   // Check to the right
   for (i = 1; i < 4; i++) {
     squareRight = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + i )
@@ -131,32 +133,50 @@ function fourCheckLoop(thisSquare) {
     }
   }
   for (i = 1; i < 4; i++) {
-    squareDiagRight = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (i * 11 && i * -11))
+    squareDiagRightDown = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (i * 11))
     
-    if (squareDiagRight && squareDiagRight.contains === thisSquare.contains) {
-      fourCheckDiagArrayRight.push(squareDiagRight)
+    if (squareDiagRightDown && squareDiagRightDown.contains === thisSquare.contains) {
+      fourCheckDiagArrayRightDown.push(squareDiagRightDown)
     } else {
       break
     }
   }
   for (i = 1; i < 4; i++) {
-    squareDiagLeft = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (i * 9 && i * -9))
+    squareDiagRightUp = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (i * -11))
     
-    if (squareDiagLeft && squareDiagLeft.contains === thisSquare.contains) {
-      fourCheckDiagArrayLeft.push(squareDiagLeft)
+    if (squareDiagRightUp && squareDiagRightUp.contains === thisSquare.contains) {
+      fourCheckDiagArrayRightUp.push(squareDiagRightUp)
+    } else {
+      break
+    }
+  }
+  for (i = 1; i < 4; i++) {
+    squareDiagLeftDown = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (i * 9))
+    
+    if (squareDiagLeftDown && squareDiagLeftDown.contains === thisSquare.contains) {
+      fourCheckDiagArrayLeftDown.push(squareDiagLeftDown)
+    } else {
+      break
+    }
+  }
+  for (i = 1; i < 4; i++) {
+    squareDiagLeftUp = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (i * -9))
+    
+    if (squareDiagLeftUp && squareDiagLeftUp.contains === thisSquare.contains) {
+      fourCheckDiagArrayLeftUp.push(squareDiagLeftUp)
     } else {
       break
     }
   }
   // If direction checks on each side or above and below are 3 or more, do not place piece and continue player's turn
-  if (fourCheckRightArray.length + fourCheckLeftArray.length >= 3 || fourCheckUpArray.length + fourCheckDownArray.length >= 3 || fourCheckDiagArrayLeft.length + fourCheckDiagArrayRight.length >= 3) {
+  if (fourCheckRightArray.length + fourCheckLeftArray.length >= 3 || fourCheckUpArray.length + fourCheckDownArray.length >= 3 || fourCheckDiagArrayLeftUp.length + fourCheckDiagArrayLeftDown.length >= 3 || fourCheckDiagArrayRightDown.length + fourCheckDiagArrayRightUp.length >= 3) {
     console.log('THAT\'S FOUR BRUH!!!')
     thisSquare.contains = 'empty'
     renderBoard()
     isWhiteTurn = !isWhiteTurn
     return
   }
-  console.log(fourCheckRightArray, fourCheckLeftArray, fourCheckUpArray, fourCheckDownArray, fourCheckDiagArrayLeft, fourCheckDiagArrayRight)
+  console.log(fourCheckRightArray, fourCheckLeftArray, fourCheckUpArray, fourCheckDownArray, fourCheckDiagArrayLeftUp, fourCheckDiagArrayLeftDown, fourCheckDiagArrayRightUp, fourCheckDiagArrayRightDown)
 }
 
 // can be adjusted 
