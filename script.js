@@ -18,9 +18,9 @@ const Square = function(id, row, col, contains, canPlaceWhite, canPlaceBlack) {
   this.squareNumber = `${row}${col}`
   this.row = row
   this.col = col
-  // contains will be white, black or empty and will use this to change HTML classes
+    // contains will be white, black or empty and will use this to change HTML classes
   this.contains = contains
-  // These two will be checked to see if white or black or neither color are allowed to be placed
+    // These two will be checked to see if white or black or neither color are allowed to be placed
   this.canPlaceWhite = canPlaceWhite
   this.canPlaceBlack = canPlaceBlack
   // Add each object to the array as it is created
@@ -88,6 +88,8 @@ function fourCheckLoop(thisSquare) {
   const fourCheckLeftArray = [];
   const fourCheckUpArray = [];
   const fourCheckDownArray = [];
+  const fourCheckDiagArrayLeft = [];
+  const fourCheckDiagArrayRight = [];
   // Check to the right
   for (i = 1; i < 4; i++) {
     squareRight = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + i )
@@ -128,15 +130,33 @@ function fourCheckLoop(thisSquare) {
       break
     }
   }
+  for (i = 1; i < 4; i++) {
+    squareDiagRight = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (i * 11 && i * -11))
+    
+    if (squareDiagRight && squareDiagRight.contains === thisSquare.contains) {
+      fourCheckDiagArrayRight.push(squareDiagRight)
+    } else {
+      break
+    }
+  }
+  for (i = 1; i < 4; i++) {
+    squareDiagLeft = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (i * 9 && i * -9))
+    
+    if (squareDiagLeft && squareDiagLeft.contains === thisSquare.contains) {
+      fourCheckDiagArrayLeft.push(squareDiagLeft)
+    } else {
+      break
+    }
+  }
   // If direction checks on each side or above and below are 3 or more, do not place piece and continue player's turn
-  if (fourCheckRightArray.length + fourCheckLeftArray.length >= 3 || fourCheckUpArray.length + fourCheckDownArray.length >= 3) {
+  if (fourCheckRightArray.length + fourCheckLeftArray.length >= 3 || fourCheckUpArray.length + fourCheckDownArray.length >= 3 || fourCheckDiagArrayLeft.length + fourCheckDiagArrayRight.length >= 3) {
     console.log('THAT\'S FOUR BRUH!!!')
     thisSquare.contains = 'empty'
     renderBoard()
     isWhiteTurn = !isWhiteTurn
     return
   }
-  console.log(fourCheckRightArray, fourCheckLeftArray, fourCheckUpArray, fourCheckDownArray)
+  console.log(fourCheckRightArray, fourCheckLeftArray, fourCheckUpArray, fourCheckDownArray, fourCheckDiagArrayLeft, fourCheckDiagArrayRight)
 }
 
 // can be adjusted 
@@ -155,7 +175,7 @@ function turnLogic(pieceContainer, square) {
 
     // Check for four in a row
     fourCheckLoop(thisSquare)
-    
+        
     
     const capture = square.id
     if (isWhiteTurn) {
