@@ -80,6 +80,58 @@ function findSquare(value) {
   return squareArray.find(square => square.id === value)
 }
 
+const horizontalMod = 1
+const verticalMod = 10
+const diagDownMod = 11
+const diagUpMod = 9
+
+function fourCheck(mod, thisSquare) {
+  let result = true
+  const fourCheckNextArray = []
+  const fourCheckPrevArray = []
+  for (i = 1; i < 4; i++) {
+    nextSquare = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (mod * i))
+    if (nextSquare && nextSquare.contains === thisSquare.contains) {
+      fourCheckNextArray.push(nextSquare)
+    } else {
+      break
+    }
+  }
+  for (i = 1; i < 4; i++) {
+    prevSquare = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) - (mod * i))
+    if (prevSquare && prevSquare.contains === thisSquare.contains) {
+      fourCheckPrevArray.push(prevSquare)
+    } else {
+      break
+    }
+  }
+
+  if (fourCheckNextArray.length + fourCheckPrevArray.length >= 3) {
+    result = false
+  }
+  console.log(`Result = ${result}`)
+  return result
+}
+
+function fourCheckAll(thisSquare) {
+  let legalMove = true
+  const horizontal = fourCheck(horizontalMod, thisSquare)
+  const vertical = fourCheck(verticalMod, thisSquare)
+  const diagDown = fourCheck(diagDownMod, thisSquare)
+  const diagUp = fourCheck(diagUpMod, thisSquare)
+
+  if (horizontal === false || vertical === false || diagDown === false || diagUp === false) {
+    legalMove = false
+    console.log('THAT\'S FOUR BRUH!!!')
+    thisSquare.contains = 'empty'
+    renderBoard()
+    isWhiteTurn = !isWhiteTurn
+  }
+  console.log(`Four check result: ${legalMove}`)
+  return legalMove
+}
+
+
 // Check for four in a row (not complete)
 // TODO: Finish four in a row logic and include diagonals
 function fourCheckLoop(thisSquare) {
@@ -92,6 +144,7 @@ function fourCheckLoop(thisSquare) {
   const fourCheckDiagArrayLeftUp = [];
   const fourCheckDiagArrayRightDown = [];
   const fourCheckDiagArrayRightUp = [];
+
   // Check to the right
   for (i = 1; i < 4; i++) {
     squareRight = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + i )
@@ -194,7 +247,10 @@ function turnLogic(pieceContainer, square) {
     console.log(thisSquare)
 
     // Check for four in a row
-    fourCheckLoop(thisSquare)
+    // fourCheckLoop(thisSquare)
+    fourCheckAll(thisSquare)
+
+   
         
     
     const capture = square.id
