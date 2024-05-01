@@ -131,6 +131,71 @@ function fourCheckAll(thisSquare) {
   return legalMove
 }
 
+let whiteScore = 0
+let blackScore = 0
+
+function threeCheck(mod, thisSquare, color, score) {
+  let nextSquare = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + mod);
+  let prevSquare = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) - mod);
+
+  if (thisSquare.contains === color && nextSquare && prevSquare && nextSquare.contains === color && prevSquare.contains === color) {
+    score++
+  }
+  return score
+}
+
+function threeCheck2(mod, thisSquare, color) {
+  let tally = 0
+  let nextSquare = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + mod);
+  let prevSquare = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) - mod);
+
+  if (thisSquare.contains === color && nextSquare && prevSquare && nextSquare.contains === color && prevSquare.contains === color) {
+    tally++
+  }
+  return tally
+}
+
+function squareCheck(thisSquare, score) {
+  let tally = 0
+  tally = threeCheck2(horizontalMod, thisSquare, 'white') +
+  threeCheck2(verticalMod, thisSquare, 'white') +
+  threeCheck2(diagDownMod, thisSquare, 'white') +
+  threeCheck2(diagUpMod, thisSquare, 'white')
+  console.log(`Tally = ${tally}`)
+  if (tally === 4) {
+    score -= 2
+  }
+  return score
+}
+
+
+function addWhiteScores(thisSquare) {
+  whiteScore = threeCheck(horizontalMod, thisSquare, 'white', whiteScore)
+  whiteScore = threeCheck(verticalMod, thisSquare, 'white', whiteScore)
+  whiteScore = threeCheck(diagDownMod, thisSquare, 'white', whiteScore)
+  whiteScore = threeCheck(diagUpMod, thisSquare, 'white', whiteScore)
+  whiteScore = squareCheck(thisSquare, whiteScore)
+  return whiteScore
+}
+function addBlackScores(thisSquare) {
+  blackScore = threeCheck(horizontalMod, thisSquare, 'black', blackScore)
+  blackScore = threeCheck(verticalMod, thisSquare, 'black', blackScore)
+  blackScore = threeCheck(diagDownMod, thisSquare, 'black', blackScore)
+  blackScore = threeCheck(diagUpMod, thisSquare, 'black', blackScore)
+  blackScore = squareCheck(thisSquare, blackScore)
+  return blackScore
+}
+
+function tallyScores() {
+  for (const thisSquare of squareArray) {
+    addWhiteScores(thisSquare);
+    addBlackScores(thisSquare);
+  }
+  console.log(`Black: ${blackScore}`)
+  console.log(`White: ${whiteScore}`)
+}
+
+
 
 // Check for four in a row (not complete)
 // TODO: Finish four in a row logic and include diagonals
