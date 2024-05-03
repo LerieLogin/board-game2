@@ -73,6 +73,7 @@ function renderBoard() {
       pieceClass = 'empty'
     }
 
+    tallyScores()
     
     // Give square a class of white black or empty based on above
     boardSquare.classList.add(pieceClass)
@@ -82,6 +83,7 @@ function renderBoard() {
   })
   main.appendChild(board)
   
+  
 }
 // Make objects and then render squares
 makeBoard();
@@ -89,12 +91,12 @@ renderBoard()
 
 
 function legal(mod, thisSquare, color) {
-  let squarePlusTwo = parseInt(thisSquare.squareNumber) + (mod * 2);
-    let squareMinusTwo = parseInt(thisSquare.squareNumber) - (mod * 2);
-    if(isWhiteTurn) {
+    let squarePlusTwo = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (mod * 2));
+    let squareMinusTwo = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) - (mod * 2));
+    if(squarePlusTwo && squareMinusTwo && color === 'white') {
       squarePlusTwo.canPlaceWhite = false
       squareMinusTwo.canPlaceWhite = false
-    } else {
+    } else if (squarePlusTwo && squareMinusTwo && color === 'black'){
       squarePlusTwo.canPlaceBlack = false
       squareMinusTwo.canPlaceBlack = false
     }
@@ -195,8 +197,6 @@ function tallyScores() {
     whiteScore = addWhiteScores(thisSquare);
     blackScore = addBlackScores(thisSquare);
   }
-  console.log(`Black: ${blackScore}`)
-  console.log(`White: ${whiteScore}`)
 }
 
 // can be adjusted 
@@ -214,7 +214,6 @@ function turnLogic(pieceContainer, square) {
     console.log(thisSquare)
 
     // Check for four in a row
-    // fourCheckLoop(thisSquare)
     fourCheckAll(thisSquare)
 
    
@@ -268,6 +267,7 @@ function turnLogic(pieceContainer, square) {
         return;
       }
     }
+    renderBoard()
   }
 
 
