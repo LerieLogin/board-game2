@@ -93,12 +93,12 @@ renderBoard()
 function legal(mod, thisSquare, color) {
     let squarePlusTwo = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) + (mod * 2));
     let squareMinusTwo = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) - (mod * 2));
-    if(squarePlusTwo && squareMinusTwo && color === 'white') {
-      squarePlusTwo.canPlaceWhite = false
-      squareMinusTwo.canPlaceWhite = false
-    } else if (squarePlusTwo && squareMinusTwo && color === 'black'){
-      squarePlusTwo.canPlaceBlack = false
-      squareMinusTwo.canPlaceBlack = false
+    if(color === 'white') {
+      if (squarePlusTwo) {squarePlusTwo.canPlaceWhite = false} 
+      if (squareMinusTwo) {squareMinusTwo.canPlaceWhite = false} 
+    } else if (color === 'black'){
+      if (squarePlusTwo) {squarePlusTwo.canPlaceBlack = false}
+      if (squareMinusTwo) {squareMinusTwo.canPlaceBlack = false}
     }
 }
 
