@@ -17,6 +17,7 @@ const verticalMod = 10
 const diagDownMod = 11
 const diagUpMod = 9
 
+let legalMove = true
 // Object array
 let squareArray = []
 
@@ -71,6 +72,8 @@ function renderBoard() {
     } else {
       pieceClass = 'empty'
     }
+
+    
     // Give square a class of white black or empty based on above
     boardSquare.classList.add(pieceClass)
     board.appendChild(boardSquare);
@@ -78,10 +81,24 @@ function renderBoard() {
     
   })
   main.appendChild(board)
+  
 }
 // Make objects and then render squares
 makeBoard();
 renderBoard()
+
+
+function legal(mod, thisSquare, color) {
+  let squarePlusTwo = parseInt(thisSquare.squareNumber) + (mod * 2);
+    let squareMinusTwo = parseInt(thisSquare.squareNumber) - (mod * 2);
+    if(isWhiteTurn) {
+      squarePlusTwo.canPlaceWhite = false
+      squareMinusTwo.canPlaceWhite = false
+    } else {
+      squarePlusTwo.canPlaceBlack = false
+      squareMinusTwo.canPlaceBlack = false
+    }
+}
 
 
 function findSquare(value) {
@@ -117,7 +134,6 @@ function fourCheck(mod, thisSquare) {
 }
 
 function fourCheckAll(thisSquare) {
-  let legalMove = true
   const horizontal = fourCheck(horizontalMod, thisSquare)
   const vertical = fourCheck(verticalMod, thisSquare)
   const diagDown = fourCheck(diagDownMod, thisSquare)
@@ -141,6 +157,8 @@ function threeCheck(mod, thisSquare, color) {
   let prevSquare = squareArray.find(square => parseInt(square.squareNumber) === parseInt(thisSquare.squareNumber) - mod);
 
   if (thisSquare.contains === color && nextSquare && prevSquare && nextSquare.contains === color && prevSquare.contains === color) {
+    legal(mod, thisSquare, color)
+
     tally++
   }
   return tally
